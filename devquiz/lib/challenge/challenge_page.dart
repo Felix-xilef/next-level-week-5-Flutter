@@ -1,17 +1,20 @@
-import 'package:devquiz/challenge/challenge_controller.dart';
 import 'package:flutter/material.dart';
 
+import 'package:devquiz/challenge/challenge_controller.dart';
 import 'package:devquiz/challenge/widget/next_button/next_button_widget.dart';
 import 'package:devquiz/challenge/widget/question_indicator/question_indicator.dart';
 import 'package:devquiz/challenge/widget/quiz/quiz_widget.dart';
+import 'package:devquiz/result/result_page.dart';
 import 'package:devquiz/shared/models/question_model.dart';
 
 class ChallengePage extends StatefulWidget {
   final List<QuestionModel> questions;
+  final String title;
 
   const ChallengePage({
     Key? key,
     required this.questions,
+    required this.title,
   }) : super(key: key);
 
   @override
@@ -36,6 +39,20 @@ class _ChallengePageState extends State<ChallengePage> {
       curve: Curves.decelerate,
     );
     controller.answered = false;
+  }
+
+  Future<void> resultPage() async {
+    Navigator.pushReplacement(context, MaterialPageRoute(
+      builder: (context) => ResultPage(
+        title: widget.title,
+        length: widget.questions.length,
+        result: controller.numberRightAnswers,
+      )
+    ));
+  }
+
+  void onSelect(bool value) {
+    if (value) controller.numberRightAnswers++;
   }
 
   @override
@@ -70,8 +87,9 @@ class _ChallengePageState extends State<ChallengePage> {
         controller: pageController,
         children: widget.questions.map((e) => QuizWidget(
           question: e,
-          onChange: (){
+          onSelect: (value) {
             controller.answered = true;
+            onSelect(value);
           },
         )).toList(),
       ),
@@ -91,7 +109,7 @@ class _ChallengePageState extends State<ChallengePage> {
                       if (lastPage) {
                         return NextButtonWidget.green(
                           label: "Confirmar",
-                          onTap: (){ Navigator.pop(context); },
+                          onTap: resultPage,
                         );
                       } else {
                         return NextButtonWidget.green(
@@ -102,7 +120,7 @@ class _ChallengePageState extends State<ChallengePage> {
                     } else {
                       return NextButtonWidget.white(
                         label: "Pular",
-                        onTap: lastPage ? (){ Navigator.pop(context); } : nextPage,
+                        onTap: lastPage ? resultPage : nextPage,
                       );
                     }
                   }

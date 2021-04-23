@@ -8,4 +8,6 @@ class ChallengeController {
   final answeredNotifier = ValueNotifier<bool>(false);
   bool get answered => answeredNotifier.value;
   set answered(bool value) => answeredNotifier.value = value;
+
+  int numberRightAnswers = 0;
 }
