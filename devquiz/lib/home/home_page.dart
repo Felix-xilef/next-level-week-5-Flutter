@@ -1,7 +1,7 @@
 // Import relativo
-import 'package:devquiz/core/core.dart';
-import 'package:devquiz/home/home_state.dart';
+import 'package:devquiz/challenge/challenge_page.dart';
 
+import 'home_state.dart';
 import 'home_controller.dart';
 import 'widgets/appbar/app_bar_widget.dart';
 import 'widgets/level_button/level_button_widget.dart';
@@ -9,6 +9,7 @@ import 'widgets/quiz_card/quiz_card_widget.dart';
 
 // Import completo
 import 'package:flutter/material.dart';
+import 'package:devquiz/core/core.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
@@ -64,6 +65,12 @@ class _HomePageState extends State<HomePage> {
                     title: e.title,
                     completed: '${e.questionsAnswered} de ${e.questions.length}',
                     percentage: e.questionsAnswered/e.questions.length,
+                    onTap: (){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ChallengePage(questions: e.questions,)),
+                      );
+                    },
                   )).toList(),
                 ),
               ),
